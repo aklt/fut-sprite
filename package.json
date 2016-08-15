@@ -1,0 +1,8 @@
+{
+  "name": "fut-sorite",
+  "version": "0.0.0",
+  "description": "play fur sprites",
+  "devDependencies": {
+    "tape": "^4.6.0"
+  }
+}
