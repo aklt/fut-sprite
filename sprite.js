@@ -57,7 +57,8 @@ var modes = {
 }
 function spriteStringifyOne (o, prev) {
   return [
-    (!o.char || o.char === prev.char) ? ' ' : o.char,
+    // (!o.char || o.char === prev.char) ? ' ' : o.char,
+    intToChar(o.char, prev.char),
     intToChar(o.x, prev.x),
     intToChar(o.y, prev.y),
     intToChar(o.color, prev.color),
@@ -81,9 +82,17 @@ function spriteStringify (ss) {
   return res
 }
 
+var ss = spriteStringify ({
+  char: 1,
+  color: 2
+})
+
+console.warn(ss)
+console.warn(spriteParse(ss))
+
 function spriteParseOne (str, prev) {
   var result = {}
-  result.char = (str[0] === ' ') ? prev.char : str[0]
+  result.char = intOfChar(str[0], prev.char)
   result.x = intOfChar(str[1], prev.x || 0, 36)
   result.y = intOfChar(str[2], prev.y || 0, 36)
   result.color = intOfChar(str[3], prev.color || 0, 36)
@@ -118,7 +127,17 @@ function spriteParse (ss) {
   return res
 }
 
-function spritePaint (ctx, ss, x, y) {
+// This is included in the client
+
+/**
+ * @param ctx The 2d canvas context
+ * @param ss  An Array of sprite objects
+ * @param cs  An array of chars to be index
+ * @param ps  Palette array of colors
+ * @param x   x coordinate where to print the sprite
+ * @param y   y coordinate to printthe sprite at
+ */
+function spritePaint (ctx, cs, ps, ss, x, y) {
   if (!Array.isArray(ss)) ss = [ss]
   ss = ss.map(function (s) {
     if (typeof s === 'string') return spriteParseOne(s)
@@ -129,7 +148,6 @@ function spritePaint (ctx, ss, x, y) {
   ctx.textAlign = 'center'
   for (var i = 0; i < ss.length; i += 1) {
     var o = ss[i]
-    console.warn('Paint', o)
     var tx = o.x + x
     var ty = o.y + y
     tx = tx / o.scaleX
@@ -148,8 +166,8 @@ function spritePaint (ctx, ss, x, y) {
     // ctx.restore()
     // @end
 
-    ctx[o.mode + 'Style'] = '#' + spritePalette[o.color]
-    ctx[o.mode + 'Text'](o.char, tx, ty)
+    ctx[o.mode + 'Style'] = '#' + ps[o.color]
+    ctx[o.mode + 'Text'](cs[o.char], tx, ty)
   }
   ctx.restore()
 }
