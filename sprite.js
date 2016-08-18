@@ -66,7 +66,7 @@ function spriteStringifyOne (o, prev) {
     intToChar(o.rot, prev.rot),
     intToChar(o.scaleX, prev.scaleX),
     intToChar(o.scaleY, prev.scaleY),
-    (!o.mode || o.mode === prev.mode) ? ' ' : modes[o.mode]
+    intToChar(o.mode, prev.mode)
   ].join('')
 }
 
@@ -81,14 +81,6 @@ function spriteStringify (ss) {
   console.warn('stringify', '"' + res + '"')
   return res
 }
-
-var ss = spriteStringify ({
-  char: 1,
-  color: 2
-})
-
-console.warn(ss)
-console.warn(spriteParse(ss))
 
 function spriteParseOne (str, prev) {
   var result = {}
@@ -107,6 +99,7 @@ function spriteParseOne (str, prev) {
 }
 
 function splitAt (str, length) {
+  console.warn('XX', str)
   assert(str.length % length === 0, 'Multiplum')
   var res = []
   while (str.length > 0) {
