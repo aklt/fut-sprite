@@ -78,12 +78,22 @@ function spriteStringify (ss) {
   var res = [spriteStringifyOne(ss[0], {})]
   for (var i = 1; i < ss.length; i += 1) {
     var s1 = ss[i]
-    res.push(spriteStringifyOne(s1, {}))
+    res.push(spriteStringifyOne(s1, ss[i - 1]))
   }
   res = res.join('')
-  console.warn('stringify', '"' + res + '"')
   return res
 }
+
+console.warn('WW', '"' + spriteStringify([
+  {
+    char: 12,
+    color: 1
+  },
+  {
+    char: 12,
+    color: 2
+  }
+]) + '"')
 
 function spriteParseOne (str, prev) {
   var result = {}
