@@ -12,6 +12,8 @@
 // TODO Opacity
 // TODO Make it possible to use different modes: additive, exclusion + ...
 // TODO interpret 4 and 8 chars as alpha color and 1 char as greyscale
+// TODO Scale 0-35 to be (-17 - 18) / divisor range
+// TODO Decouple
 //
 // colors are an index innto a color array
 
@@ -72,10 +74,11 @@ function spriteStringifyOne (o, prev) {
 
 function spriteStringify (ss) {
   if (!Array.isArray(ss)) ss = [ss]
+  if (!ss[0]) return
   var res = [spriteStringifyOne(ss[0], {})]
   for (var i = 1; i < ss.length; i += 1) {
     var s1 = ss[i]
-    res.push(spriteStringifyOne(s1, ss[i - 1]))
+    res.push(spriteStringifyOne(s1, {}))
   }
   res = res.join('')
   console.warn('stringify', '"' + res + '"')
@@ -120,6 +123,23 @@ function spriteParse (ss) {
   return res
 }
 
+// Scale values in obj by divisor and set the values to ge between
+// [-17; 18].  For example if divisor is 3 each of the range of 35 steps would
+// be of value 35 / 3 ~= 11, i.e. [-5, 6]
+function scale (obj, divisor) {
+  var res = {}
+  res.char = obj.char
+  res.color = obj.color
+  res.size = obj.size
+  res.rot = obj.rot
+  res.mode = obj.mode
+  res.x = (obj.x - 17) / divisor
+  res.y = (obj.y - 17) / divisor
+  rex.scaleX = (obj.scaleX - 17) / divisor
+  rex.scaleY = (obj.scaleY - 17) / divisor
+  return res
+}
+
 // This is included in the client
 
 /**
@@ -141,11 +161,16 @@ function spritePaint (ctx, cs, ps, ss, x, y) {
   ctx.textAlign = 'center'
   for (var i = 0; i < ss.length; i += 1) {
     var o = ss[i]
-    var tx = o.x + x
-    var ty = o.y + y
-    tx = tx / o.scaleX
-    ty = ty / o.scaleY
-    ctx.scale(o.scaleX, o.scaleY)
+    o.x = o.x - 18
+    o.y = o.y - 18
+    o.scaleX = (o.scaleX - 18) / 3
+    o.scaleY = (o.scaleY - 18) / 3
+    var tx = (o.x + x) / 3
+    var ty = (o.y + y) / 3
+    tx /= o.scaleX
+    ty /= o.scaleY
+    ctx.save()
+    ctx.scale(o.scaleX , o.scaleY)
     ctx.font = o.size + 'px arial'
     if (o.rot) {
       ctx.translate(tx, ty)
@@ -159,8 +184,12 @@ function spritePaint (ctx, cs, ps, ss, x, y) {
     // ctx.restore()
     // @end
 
-    ctx[o.mode + 'Style'] = '#' + ps[o.color]
-    ctx[o.mode + 'Text'](cs[o.char], tx, ty)
+    // XXX mode is fixed and borked
+    // ctx[o.mode + 'Style'] = '#' + ps[o.color]
+    // ctx[o.mode + 'Text'](cs[o.char], tx, ty)
+    ctx['fillStyle'] = '#' + ps[o.color]
+    ctx['fillText'](cs[o.char], tx, ty)
+    ctx.restore()
   }
   ctx.restore()
 }
