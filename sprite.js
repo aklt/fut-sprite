@@ -17,32 +17,6 @@
 //
 // colors are an index innto a color array
 
-var goldenRatio = (1 + Math.sqrt(5)) / 2
-
-// Generate #xxxxxx color strings where each of RGB in the range [min;max]
-// XXX deprecate
-function newColor (num, min, max) {
-  max = max || 0x99
-  min = min || 0xDD
-
-  var result = ''
-  var range = max - min
-
-  for (var i = 1; i < 4; i += 1) {
-    var n = i * num * goldenRatio
-    var v = n - (n | 0)
-    var s = (i * i ^ (v * range + min) | 0).toString(16)
-
-    if (s.length < 2) s = '0' + s
-    result += s
-  }
-  return result
-}
-
-var spritePalette = [ 'FFF', 'F0F' ]
-
-for (var i = 0; i < 35; i += 1) spritePalette.push(newColor(i))
-
 // Characters integers
 function intOfChar (ch, defaultValue) {
   return (ch === ' ') ? defaultValue : parseInt(ch, 36)
@@ -57,6 +31,7 @@ var modes = {
   stroke: '-',
   fill: ' '
 }
+
 function spriteStringifyOne (o, prev) {
   return [
     // (!o.char || o.char === prev.char) ? ' ' : o.char,
@@ -83,17 +58,6 @@ function spriteStringify (ss) {
   res = res.join('')
   return res
 }
-
-console.warn('WW', '"' + spriteStringify([
-  {
-    char: 12,
-    color: 1
-  },
-  {
-    char: 12,
-    color: 2
-  }
-]) + '"')
 
 function spriteParseOne (str, prev) {
   var result = {}
@@ -171,27 +135,25 @@ function spritePaint (ctx, cs, ps, ss, x, y) {
   ctx.textAlign = 'center'
   for (var i = 0; i < ss.length; i += 1) {
     var o = ss[i]
-    o.x = o.x - 18
-    o.y = o.y - 18
-    o.scaleX = (o.scaleX - 18) / 3
-    o.scaleY = (o.scaleY - 18) / 3
-    var tx = (o.x + x) / 3
-    var ty = (o.y + y) / 3
-    tx /= o.scaleX
-    ty /= o.scaleY
+    o.x = o.x - 16
+    o.y = o.y - 16
+    // Scale up to 4,5 the original size
+    o.scaleX = (o.scaleX - 16) / 4
+    o.scaleY = (o.scaleY - 16) / 4
+    var tx = (o.x + x) / o.scaleX
+    var ty = (o.y + y) / o.scaleY
     ctx.save()
-    ctx.scale(o.scaleX , o.scaleY)
     ctx.font = o.size + 'px arial'
-    if (o.rot) {
-      ctx.translate(tx, ty)
-      ctx.rotate((Math.PI / 180) * (360 / 36) * o.rot)
-      ctx.translate(-tx, -ty)
-    }
+    ctx.scale(o.scaleX , o.scaleY)
+    // Rotate
+    ctx.translate(tx, ty)
+    ctx.rotate((Math.PI / 180) * (360 / 36) * o.rot)
+    ctx.translate(-tx, -ty)
     // @dev
-    // ctx.save()
-    // ctx.fillStyle = '#111'
-    // ctx.fillRect(tx, ty, 4 / o.scaleX || 1, 4 / o.scaleY || 1)
-    // ctx.restore()
+    ctx.save()
+    ctx.fillStyle = '#A11'
+    ctx.fillRect(tx, ty, 1, 1)
+    ctx.restore()
     // @end
 
     // XXX mode is fixed and borked
@@ -204,22 +166,10 @@ function spritePaint (ctx, cs, ps, ss, x, y) {
   ctx.restore()
 }
 
-function showPalette (ctx, x, y) {
-  var dy = 0
-  ctx.save()
-  spritePalette.forEach(function (color) {
-    ctx.fillStyle = '#' + color
-    ctx.fillRect(x, y + dy, 40, 20)
-    dy += 20
-  })
-  ctx.restore()
-}
-
 if (typeof module !== 'undefined') {
   module.exports = {
     stringify: spriteStringify,
-    parse: spriteParse,
-    colors: spritePalette
+    parse: spriteParse
   }
 }
 
