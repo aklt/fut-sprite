@@ -6,14 +6,19 @@
 // * All sizes are max. 35
 // * Everything is an int
 //
-// TODO space at a numerical position == 0
-// TODO Make each frame a string of 9 bytes for simplicity for now
-//      Later this can be compressed further, but get things working!
 // TODO Opacity
 // TODO Make it possible to use different modes: additive, exclusion + ...
 // TODO interpret 4 and 8 chars as alpha color and 1 char as greyscale
-// TODO Scale 0-35 to be (-17 - 18) / divisor range
 // TODO Decouple
+// TODO animate on properties accorfing to mode
+// TODO Make sprite sheet
+//
+// anim: {
+//   propIndex: 1,
+//   min: 2,
+//   max: 2,
+//   step: 4
+// }
 //
 // colors are an index innto a color array
 
@@ -27,14 +32,27 @@ function intToChar (int, prev) {
   return (int === prev) ? ' ' : int.toString(36)
 }
 
-var modes = {
-  stroke: '-',
-  fill: ' '
+//
+// The values in the char could select:
+//
+// bit0: draw as fill / stroke
+// bit1: is a hitlayer / nothitlayer
+// bit2: anim group 1
+// bit3: anim group 2
+// bit4: amim group 3
+
+// Use 5 bits to get an LE array of numbers 0 = false and others true
+function modeChar (v0, v1, v2, v3, v4) {
+  return (v0 + (v1 && 2) + (v2 && 4) + (v3 && 8) + (v4 && 16)).toString(36)
+}
+
+function modeValue (ch) {
+  var i = parseInt(ch, 36)
+  return [ i & 1, i & 2, i & 4, i & 8, i & 16 ]
 }
 
 function spriteStringifyOne (o, prev) {
   return [
-    // (!o.char || o.char === prev.char) ? ' ' : o.char,
     intToChar(o.char, prev.char),
     intToChar(o.x, prev.x),
     intToChar(o.y, prev.y),
@@ -76,7 +94,6 @@ function spriteParseOne (str, prev) {
 }
 
 function splitAt (str, length) {
-  console.warn('XX', str)
   assert(str.length % length === 0, 'Multiplum')
   var res = []
   while (str.length > 0) {
@@ -93,7 +110,6 @@ function spriteParse (ss) {
   for (var i = 1; i < ss.length; i += 1) {
     res.push(spriteParseOne(ss[i], res[i - 1]))
   }
-  console.warn('parsed', res)
   return res
 }
 
