@@ -141,35 +141,31 @@ function scale (obj, divisor) {
  * @param y   y coordinate to printthe sprite at
  */
 function spritePaint (ctx, cs, ps, ss, x, y) {
-  if (!Array.isArray(ss)) ss = [ss]
-  ss = ss.map(function (s) {
-    if (typeof s === 'string') return spriteParseOne(s)
-    return s
-  })
+  if (!Array.isArray(ss)) ss = spriteParse(ss)
   ctx.save()
   ctx.textBaseline = 'middle'
   ctx.textAlign = 'center'
   for (var i = 0; i < ss.length; i += 1) {
     var o = ss[i]
-    o.x = o.x - 16
-    o.y = o.y - 16
+    var ox = o.x - 18
+    var oy = o.y - 18
     // Scale up to 4,5 the original size
-    o.scaleX = (o.scaleX - 16) / 4
-    o.scaleY = (o.scaleY - 16) / 4
-    var tx = (o.x + x) / o.scaleX
-    var ty = (o.y + y) / o.scaleY
+    var sx = (o.scaleX - 17) / 4
+    var sy = (o.scaleY - 17) / 4
+    var tx = (ox + x) / sx
+    var ty = (oy + y) / sy
     ctx.save()
     ctx.font = o.size + 'px arial'
-    ctx.scale(o.scaleX , o.scaleY)
+    ctx.scale(sx, sy)
     // Rotate
     ctx.translate(tx, ty)
     ctx.rotate((Math.PI / 180) * (360 / 36) * o.rot)
     ctx.translate(-tx, -ty)
     // @dev
-    ctx.save()
-    ctx.fillStyle = '#A11'
-    ctx.fillRect(tx, ty, 1, 1)
-    ctx.restore()
+    //ctx.save()
+    //ctx.fillStyle = '#A11'
+    //ctx.fillRect(tx, ty, 1, 1)
+    //ctx.restore()
     // @end
 
     // XXX mode is fixed and borked
