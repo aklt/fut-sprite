@@ -186,6 +186,9 @@ if (typeof module !== 'undefined') {
 }
 
 function assert (condition, err) {
-  if (!condition) throw new Error(err || "Bad")
+  if (!condition) {
+    console.error(err, err && err.stack)
+    throw (err instanceof Error ? err : new Error(err || 'Bad'))
+  }
 }
 
