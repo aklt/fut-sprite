@@ -12,6 +12,8 @@
 // TODO Decouple
 // TODO animate on properties accorfing to mode
 // TODO Make sprite sheet
+// TODO Skew gl viewport to make a glitch if the player is attacked / eats a
+// mushroom
 //
 // anim: {
 //   propIndex: 1,
@@ -178,12 +180,14 @@ function spritePaint (ctx, cs, ps, ss, x, y) {
   ctx.restore()
 }
 
+// @dev
 if (typeof module !== 'undefined') {
   module.exports = {
     stringify: spriteStringify,
     parse: spriteParse
   }
 }
+// @end
 
 function assert (condition, err) {
   if (!condition) {
