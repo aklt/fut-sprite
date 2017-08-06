@@ -2,7 +2,12 @@
   "name": "fut-sprite",
   "version": "0.0.1",
   "description": "play fut sprites",
+  "scripts": {
+    "build": "./compile.js Fut.js",
+    "dev": "freshen"
+  },
   "devDependencies": {
+    "freshen": "^0.6.2",
     "google-closure-compiler": "^20170626.0.0",
     "mocha": "^3.5.0",
     "phantomjs": "^2.1.7",
