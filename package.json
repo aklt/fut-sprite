@@ -1,8 +1,11 @@
 {
   "name": "fut-sprite",
-  "version": "0.0.0",
-  "description": "play fur sprites",
+  "version": "0.0.1",
+  "description": "play fut sprites",
   "devDependencies": {
-    "tape": "^4.6.0"
+    "google-closure-compiler": "^20170626.0.0",
+    "mocha": "^3.5.0",
+    "phantomjs": "^2.1.7",
+    "unexpected": "^10.33.1"
   }
 }
