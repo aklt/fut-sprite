@@ -81,8 +81,8 @@
       ctx.save()
       // FIXME These are inconsistent across browsers
       // see: https://github.com/kangax/fabric.js/issues/291
-      // ctx.textBaseline = 'middle'
-      // ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      ctx.textAlign = 'center'
       for (var i = 0; i < this.v.length; i += 1) {
         var o = this.v[i]
         var ox = o.x - 17
