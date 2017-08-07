@@ -62,51 +62,53 @@
    * @constructor
    * @param {string} vars
    */
-  function Fut(vars) {
+  function Fut(vars, moveFuns) {
     var o = vars.split('~')
     this.chars = o[0]
     this.pal = o[1].split(/\|/)
     this.v = spriteParse(o[2])
+    this.mv = moveFuns || []
   }
 
-  /**
-   * @param {CanvasRenderingContext2D} ctx
-   * @param {number} x
-   * @param {number} y
-   */
-  Fut.prototype['paint'] = function(ctx, x, y) {
-    ctx.save()
-    // ctx.textBaseline = 'middle'
-    // ctx.textAlign = 'center'
-    for (var i = 0; i < this.v.length; i += 1) {
-      var o = this.v[i]
-      var ox = o.x - 17
-      var oy = o.y - 17
-      // Scale up to 4,5 the original size
-      var sx = o.sx - 17
-      var sy = o.sy - 17
-      var tx = (ox + x) / sx
-      var ty = (oy + y) / sy
+  Fut.prototype = {
+    /**
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {number} x
+     * @param {number} y
+     */
+    paint: function(ctx, x, y) {
       ctx.save()
-      ctx.font = o.sz + 'px Arial'
-      ctx.scale(sx, sy)
-      // Rotate
-      ctx.translate(tx, ty)
-      ctx.rotate(Math.PI / 180 * (360 / 36) * o.r)
-      ctx.translate(-tx, -ty)
-      ctx[o.paint + 'Style'] = '#' + this.pal[o.c].slice(0, 6)
-      ctx.globalAlpha = parseInt(this.chars[o.char].slice(6), 16) / 0xff
-      ctx[o.paint + 'Text'](this.chars[o.char], tx, ty)
+      // FIXME These are inconsistent across browsers
+      // ctx.textBaseline = 'middle'
+      // ctx.textAlign = 'center'
+      for (var i = 0; i < this.v.length; i += 1) {
+        var o = this.v[i]
+        var ox = o.x - 17
+        var oy = o.y - 17
+        // Scale up to 4,5 the original size
+        var sx = o.sx - 17
+        var sy = o.sy - 17
+        var tx = (ox + x) / sx
+        var ty = (oy + y) / sy
+        ctx.save()
+        ctx.font = o.sz + 'px Arial'
+        ctx.scale(sx, sy)
+        ctx.translate(tx, ty)
+        ctx.rotate(Math.PI / 180 * (360 / 36) * o.r)
+        ctx.translate(-tx, -ty)
+        ctx[o.paint + 'Style'] = '#' + this.pal[o.c].slice(0, 6)
+        ctx.globalAlpha = parseInt(this.chars[o.char].slice(6), 16) / 0xff
+        ctx[o.paint + 'Text'](this.chars[o.char], tx, ty)
+        ctx.restore()
+      }
       ctx.restore()
-    }
-    ctx.restore()
-  }
-
-  Fut.prototype['tick'] = function(group) {
-    if (this.groupFuns && this.groupFuns[group]) {
-      // FIXME collect images that are subject to tick()
-      var imgs = []
-      this.groupFuns[group](imgs)
+    },
+    tick: function(group) {
+      if (this.mv[group]) {
+        // FIXME collect images that are subject to tick()
+        var imgs = []
+        this.groupFuns[group](imgs)
+      }
     }
   }
 
