@@ -72,6 +72,7 @@
 
   Fut.prototype = {
     /**
+     * @expose
      * @param {CanvasRenderingContext2D} ctx
      * @param {number} x
      * @param {number} y
@@ -79,6 +80,7 @@
     paint: function(ctx, x, y) {
       ctx.save()
       // FIXME These are inconsistent across browsers
+      // see: https://github.com/kangax/fabric.js/issues/291
       // ctx.textBaseline = 'middle'
       // ctx.textAlign = 'center'
       for (var i = 0; i < this.v.length; i += 1) {
@@ -103,14 +105,19 @@
       }
       ctx.restore()
     },
+
+    /**
+    * @expose
+    * @param {number} group
+    */
     tick: function(group) {
       if (this.mv[group]) {
         // FIXME collect images that are subject to tick()
         var imgs = []
-        this.groupFuns[group](imgs)
+        this.mv[group](imgs)
       }
     }
   }
 
   context['Fut'] = Fut
-})(typeof window === 'undefined' ? module['exports'] : window)
+})(window)
