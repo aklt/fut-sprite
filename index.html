@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Test Fut-opt</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+      canvas {
+        border: 1px solid blue;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="body">
+      <canvas id="c0">
+        No canvas?
+      </canvas>
+    </div>
+    <script src="Fut.js"></script> 
+    <script>
+      window.onload = function () {
+        var c0 = document.getElementById('c0')
+        if (!c0) throw new Error('Gah!')
+        var c2 = c0.getContext('2d')
+        console.warn('Fut', Fut)
+        var f1 = new Fut("C~8f39ffff~0ii0l0jj0  f  i   ")
+        f1.paint(c2, 10, 50)
+        var f2 = new Fut("C~5429ffff~0bk0m0ij0 qg  i   ")
+        f2.paint(c2, 40, 20)
+        var f3 = new Fut("C~5429ff22~09k0m0ij0 r    g   hp r9ii   d        j        v      ")
+        f3.paint(c2, 70, 20)
+      }
+    </script>
+  </body>
+</html>
+
