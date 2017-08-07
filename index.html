@@ -4,9 +4,9 @@
     <title>Test Fut-opt</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style type="text/css">
-      canvas {
-        border: 1px solid blue;
-      }
+	  canvas {
+		border: 1px solid blue;
+	  }
     </style>
   </head>
   <body>
@@ -21,6 +21,7 @@
         var c0 = document.getElementById('c0')
         if (!c0) throw new Error('Gah!')
         var c2 = c0.getContext('2d')
+		c2.imageSmoothingEnabled= false
         console.warn('Fut', Fut)
         var f1 = new Fut("C~8f39ffff~0ii0l0jj0  f  i   ")
         f1.paint(c2, 10, 50)
