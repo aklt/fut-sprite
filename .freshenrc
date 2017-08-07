@@ -11,7 +11,7 @@
 # be either a string of suffix names separated by whitespace or an array of
 # regular expressions.
 report:
-  change: 'css'
+  change: 'html'
 
 # Run command each time a file matching one of the suffixes or regular
 # expressions in deps changes.
