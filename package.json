@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "play fut sprites",
   "scripts": {
-    "build": "./compile.js Fut.js",
+    "build": "./compile.js Fut.js && ls -l Fut*.js",
     "dev": "freshen"
   },
   "devDependencies": {
