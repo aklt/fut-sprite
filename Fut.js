@@ -5,7 +5,7 @@
    * @return {number}
    */
   function intOfChar(ch, defaultValue) {
-    return ch === ' ' ? defaultValue : parseInt(ch, 36)
+    return ch == ' ' ? defaultValue : parseInt(ch, 36)
   }
 
   /**
@@ -72,7 +72,7 @@
 
   Fut.prototype = {
     /**
-     * @expose
+     * @export
      * @param {CanvasRenderingContext2D} ctx
      * @param {number} x
      * @param {number} y
@@ -107,7 +107,7 @@
     },
 
     /**
-    * @expose
+    * @export
     * @param {number} group
     */
     tick: function(group) {
