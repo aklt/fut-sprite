@@ -15,7 +15,6 @@ var outfile = args[1]
 var closureCompiler = new ClosureCompiler({
   js: infile,
   env: 'BROWSER',
-  externs: 'externs.js',
   language_in: 'ECMASCRIPT_2016',
   language_out: 'ECMASCRIPT5',
   js_output_file: outfile,
