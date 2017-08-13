@@ -3,6 +3,7 @@
   "version": "0.1.1",
   "description": "play fut sprites",
   "author": "Anders Thøgersen <anders@bladre.dk>",
+  "main": "Fut.min.js",
   "scripts": {
     "build": "./compile.js Fut.js Fut.min.js",
     "dev": "freshen"
